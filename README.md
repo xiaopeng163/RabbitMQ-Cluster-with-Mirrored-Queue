@@ -1,0 +1,1 @@
+# RabbitMQ-Cluster-with-Mirrored-Queue
