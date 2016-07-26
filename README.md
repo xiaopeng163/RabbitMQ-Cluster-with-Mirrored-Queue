@@ -102,3 +102,35 @@ Policy where all queues are mirrored to all nodes in the cluster:
 ```
 
 Then you will see the queue on controller2 and controller3.
+
+
+## Install haproxy
+
+```
+% yum install haproxy
+```
+
+Edit /etc/haproxy/haproxy.cfg and create a simple TCP proxy for RabbitMQ.
+
+```
+global
+    daemon
+
+defaults
+    mode tcp
+    maxconn 10000
+    timeout connect 5s
+    timeout client 100s
+    timeout server 100s
+
+listen rabbitmq 10.15.85.141:5670
+    mode tcp
+    balance roundrobin
+    server controller1 controller1:5672 check inter 5s rise 2 fall 3
+    server controller2 controller2:5672 check inter 5s rise 2 fall 3
+    server controller3 controller3:5672 check inter 5s rise 2 fall 3
+```
+
+```
+% service haproxy start
+```
